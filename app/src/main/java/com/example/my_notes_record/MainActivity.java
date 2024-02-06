@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -22,11 +23,14 @@ public class MainActivity extends AppCompatActivity {
 
     // 用于启动 EditActivity 的 ActivityResultLauncher
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        textView = findViewById(R.id.textView);
 
         // 初始化悬浮按钮
         btn = findViewById(R.id.floatingActionButton4);
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
                             // 获取 EditActivity 返回的文本
                             String edit = data.getStringExtra("input");
                             Log.d(TAG, edit);
+                            textView.setText(edit);
                         }
                     }
                 }
