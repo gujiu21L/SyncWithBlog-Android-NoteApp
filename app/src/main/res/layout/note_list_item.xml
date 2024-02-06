@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="12dp"
+    android:outlineAmbientShadowColor="@color/black">
+
+    <!-- 用于显示笔记内容的TextView -->
+    <TextView
+        android:id="@+id/tv_content"
+        android:text="Content"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- 用于显示笔记时间的TextView -->
+    <TextView
+        android:id="@+id/tv_time"
+        android:text="Time"
+        android:textSize="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
+
