@@ -7,34 +7,42 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class EditActivity extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-    // 编辑文本的控件
-    EditText editText;
+public class EditActivity extends AppCompatActivity{
+
+    private String content; // 声明用于存储笔记内容的变量
+    private String time; // 声明用于存储笔记时间的变量
+
+    EditText et; // 声明文本编辑框
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_layout);
-
-        // 初始化编辑文本控件
-        editText = findViewById(R.id.et);
+        setContentView(R.layout.edit_layout); // 设置视图为 "edit_layout"
+        et = findViewById(R.id.et); // 从布局文件中获取文本编辑框
     }
 
     // 处理按键事件
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_HOME) {
-            // 如果按下 HOME 键，则拦截事件，不做任何操作
-            return true;
+            return true; // 如果按下 HOME 键，返回 true，表示事件已处理
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 如果按下返回键，则将编辑文本的内容返回给调用者，并设置返回结果为 RESULT_OK
-            Intent intent = new Intent();
-            intent.putExtra("input", editText.getText().toString());
-            setResult(RESULT_OK, intent);
-            finish(); // 关闭当前 Activity
-            return true;
+            Intent intent = new Intent(); // 创建一个新意图
+            intent.putExtra("content", et.getText().toString()); // 将编辑框中的文本内容放入意图中
+            intent.putExtra("time", dateToString()); // 将当前时间放入意图中
+            setResult(RESULT_OK, intent); // 设置结果为 OK，并附带意图
+            finish(); // 结束当前活动
+            return true; // 返回 true，表示事件已处理
         }
-        return super.onKeyDown(keyCode, event);
+        return super.onKeyDown(keyCode, event); // 如果按键不是 HOME 或 BACK，使用默认处理
+    }
+
+    // 将当前时间格式化为字符串
+    public String dateToString(){
+        Date date = new Date(); // 获取当前日期和时间
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 创建日期格式化器
+        return simpleDateFormat.format(date); // 格式化日期并返回字符串
     }
 }
