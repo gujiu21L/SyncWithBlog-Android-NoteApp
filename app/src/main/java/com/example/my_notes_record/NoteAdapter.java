@@ -8,8 +8,12 @@ import android.widget.TextView;
 import java.util.List;
 
 public class NoteAdapter extends BaseAdapter {
+    public interface OnNoteItemClickListener {
+        void onNoteItemClick(long noteId);
+    }
     private Context context;
     private List<Note> noteList;
+    private OnNoteItemClickListener onNoteItemClickListener;
 
     // 默认构造函数
     public NoteAdapter(){
@@ -19,6 +23,12 @@ public class NoteAdapter extends BaseAdapter {
     public NoteAdapter(Context Context,List<Note> noteList){
         this.context=Context;
         this.noteList=noteList;
+    }
+
+    public NoteAdapter(Context context, List<Note> noteList, OnNoteItemClickListener onNoteItemClickListener) {
+        this.context = context;
+        this.noteList = noteList;
+        this.onNoteItemClickListener = onNoteItemClickListener;
     }
 
     // 获取列表项数量
@@ -58,9 +68,16 @@ public class NoteAdapter extends BaseAdapter {
         // 将笔记ID作为视图的标签
         view.setTag(noteList.get(position).getId());
 
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 触发笔记项点击事件
+                if (onNoteItemClickListener != null) {
+                    onNoteItemClickListener.onNoteItemClick(noteList.get(position).getId());
+                }
+            }
+        });
+
         return view;
     }
 }
-
-
-
