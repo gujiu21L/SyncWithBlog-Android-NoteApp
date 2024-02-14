@@ -115,5 +115,12 @@ public class CRUD {
         cursor.close(); // 关闭游标，释放资源
         return note; // 返回获取到的笔记对象，如果未找到则返回 null
     }
-
+    public void deleteNoteById(long noteId) {
+        // 执行删除操作，根据 ID 删除指定笔记
+        db.delete(
+                NoteDatabase.TABLE_NAME,
+                NoteDatabase.ID + "=?",
+                new String[]{String.valueOf(noteId)}
+        );
+    }
 }

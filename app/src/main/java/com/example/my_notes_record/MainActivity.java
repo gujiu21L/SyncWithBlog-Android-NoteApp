@@ -1,6 +1,7 @@
 package com.example.my_notes_record;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ListView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -17,7 +19,7 @@ import java.util.List;
 
 
 // 创建名为 "MainActivity" 的主活动类
-public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNoteItemClickListener {
+public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNoteItemClickListener , NoteAdapter.OnNoteItemLongClickListener{
 
     private Context context = this; // 上下文对象，用于数据库操作
     private NoteDatabase dbHelper; // 数据库帮助类
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
 
         lv = findViewById(R.id.lv); // 列表视图，用于显示数据列表
 
-        adapter = new NoteAdapter(getApplicationContext(), noteList , this);//初始化一个笔记适配器，并将应用的上下文对象和笔记列表传递给适配器
+        adapter = new NoteAdapter(getApplicationContext(), noteList , this , this);//初始化一个笔记适配器，并将应用的上下文对象和笔记列表传递给适配器
 
         refreshListView(); // 刷新笔记列表
 
@@ -128,4 +130,36 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
         op.updateNote(updatedNote);
         op.close();
     }
+
+    @Override
+    public void onNoteItemLongClick(long noteId) {
+        showDeleteConfirmationDialog(noteId);
+    }
+
+    private void showDeleteConfirmationDialog(final long noteId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("确定要删除此笔记吗？")
+                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 在确认后删除笔记
+                        deleteNoteById(noteId);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // 用户取消对话框，什么也不做
+                    }
+                });
+        builder.create().show();
+    }
+
+    // 通过 ID 删除笔记的方法
+    private void deleteNoteById(long noteId) {
+        CRUD op = new CRUD(this);
+        op.open();
+        op.deleteNoteById(noteId);
+        op.close();
+        refreshListView(); // 删除后刷新列表
+    }
+
 }

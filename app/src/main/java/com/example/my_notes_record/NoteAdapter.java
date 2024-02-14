@@ -12,9 +12,14 @@ public class NoteAdapter extends BaseAdapter {
     public interface OnNoteItemClickListener {
         void onNoteItemClick(long noteId);
     }
+    // 定义笔记项长按事件的接口
+    public interface OnNoteItemLongClickListener {
+        void onNoteItemLongClick(long noteId);
+    }
     private Context context;
     private List<Note> noteList;
     private OnNoteItemClickListener onNoteItemClickListener;
+    private OnNoteItemLongClickListener onNoteItemLongClickListener; // 长按事件的监听器
 
     // 默认构造函数
     public NoteAdapter(){
@@ -30,6 +35,13 @@ public class NoteAdapter extends BaseAdapter {
         this.context = context;
         this.noteList = noteList;
         this.onNoteItemClickListener = onNoteItemClickListener;
+    }
+
+    public NoteAdapter(Context context, List<Note> noteList, OnNoteItemClickListener listener, OnNoteItemLongClickListener longClickListener) {
+        this.context = context;
+        this.noteList = noteList;
+        this.onNoteItemClickListener = listener;
+        this.onNoteItemLongClickListener = longClickListener;
     }
 
     // 获取列表项数量
@@ -76,6 +88,17 @@ public class NoteAdapter extends BaseAdapter {
                 if (onNoteItemClickListener != null) {
                     onNoteItemClickListener.onNoteItemClick(noteList.get(position).getId());
                 }
+            }
+        });
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                // 触发笔记项长按事件
+                if (onNoteItemLongClickListener != null) {
+                    onNoteItemLongClickListener.onNoteItemLongClick(noteList.get(position).getId());
+                }
+                return true; // 消耗长按事件
             }
         });
 
