@@ -8,12 +8,13 @@ import android.widget.TextView;
 import java.util.List;
 
 public class NoteAdapter extends BaseAdapter {
+    // 定义笔记项点击事件的接口
     public interface OnNoteItemClickListener {
         void onNoteItemClick(long noteId);
     }
     private Context context;
     private List<Note> noteList;
-    OnNoteItemClickListener onNoteItemClickListener;
+    private OnNoteItemClickListener onNoteItemClickListener;
 
     // 默认构造函数
     public NoteAdapter(){
