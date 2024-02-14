@@ -113,4 +113,15 @@ public class CRUD {
                 //创建一个字符串数组，数组中包含了要替代占位符 `"=?"` 的具体数值。在这里，它包含了笔记对象的 ID。
         );
     }
+
+    // 根据 ID 删除笔记
+    public void deleteNoteById(long noteId) {
+        // 执行删除操作，根据 ID 删除指定笔记
+        db.delete(
+                NoteDatabase.TABLE_NAME,
+                NoteDatabase.ID + "=?",
+                new String[]{String.valueOf(noteId)}
+        );
+    }
+
 }
