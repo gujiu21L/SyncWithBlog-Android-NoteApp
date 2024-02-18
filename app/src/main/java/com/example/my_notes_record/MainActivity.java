@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
     private List<Note> noteList = new ArrayList<>(); // 笔记列表
     private FloatingActionButton btn; // 悬浮按钮
     private ListView lv; // 列表视图
+    private SearchView searchView; // 搜索视图
 
     // 定义一个 ActivityResultLauncher，用于处理其他活动的结果
     private ActivityResultLauncher<Intent> someActivityResultLauncher;
@@ -49,6 +51,24 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
         refreshListView(); // 刷新笔记列表
 
         lv.setAdapter(adapter); // 将适配器与列表视图关联，从而显示笔记列表中的数据在界面上
+
+        searchView = findViewById(R.id.searchView); // 搜索视图 用于在应用程序中提供搜索功能
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override  // 查询文本提交
+            public boolean onQueryTextSubmit(String query) {
+                // 处理搜索提交（如果需要的话） 这里显然不需要
+                return false; // 不处理搜索提交 ， 将依赖系统提供的默认行为（关闭键盘）
+            }
+
+            @Override // 只要“SearchView”中的文本发生更改，即当用户在搜索框中键入或删除字符时，就会调用此方法。
+            public boolean onQueryTextChange(String newText) {
+                // 处理文本更改时的搜索
+                filterNotes(newText);
+                return true; // 完全处理了文本更改时的搜索 ，并将不采取默认行为
+                }
+            }
+        );
 
         // 初始化 ActivityResultLauncher，用于处理启动其他活动的结果
         someActivityResultLauncher = registerForActivityResult(
@@ -86,6 +106,28 @@ public class MainActivity extends AppCompatActivity implements NoteAdapter.OnNot
                 someActivityResultLauncher.launch(intent);
             }
         });
+    }
+    private void filterNotes(String query) {
+        // 创建一个新的笔记列表，用于存储过滤后的笔记
+        List<Note> filteredList = new ArrayList<>();
+
+        // 遍历原始笔记列表
+        for (Note note : noteList) {
+            // 判断笔记内容是否包含用户输入的查询条件（不区分大小写）
+            if (note.getContent().toLowerCase().contains(query.toLowerCase())) {
+                // 笔记内容匹配查询条件，将笔记添加到过滤后的列表中
+                filteredList.add(note);
+            }
+        }
+
+        // 更新适配器的笔记列表为过滤后的列表
+        adapter.setNoteList(filteredList);
+
+        // 通知适配器数据已更改，刷新列表视图
+        adapter.notifyDataSetChanged();
+
+        // 刷新整个笔记列表视图
+        refreshListView();
     }
 
     // 刷新笔记列表

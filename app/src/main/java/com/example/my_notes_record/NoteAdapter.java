@@ -40,6 +40,10 @@ public class NoteAdapter extends BaseAdapter {
         this.onNoteItemClickListener = listener;
         this.onNoteItemLongClickListener = longClickListener;
     }
+
+    public void setNoteList(List<Note> noteList) {
+        this.noteList = noteList;
+    }
     // 获取列表项数量
     @Override
     public int getCount() {
